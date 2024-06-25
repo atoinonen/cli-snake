@@ -1,3 +1,4 @@
+import time
 import curses
 from curses.textpad import rectangle
 
@@ -21,11 +22,19 @@ def main(stdscr: curses.window):
 
     row = clamp(1, row, height+1)
     col = clamp(1, col, width+1)
-    stdscr.addch(row, col, 'A')
-    stdscr.refresh()
+    #stdscr.addch(row, col, '█')
+    #stdscr.refresh()
+
+    last = ord('d')
 
     while True:
+        stdscr.timeout(500)
         c = stdscr.getch()
+
+        stdscr.addch(row, col, ' ')
+        
+        if c == -1:
+            c = last
 
         if c == ord('w'):
             row = row - 1
@@ -37,11 +46,14 @@ def main(stdscr: curses.window):
             col = col + 1
         elif c == ord('q'):
             break
+        
+        last = c
+
         row = clamp(1, row, height+1)
         col = clamp(1, col, width+1)
-        stdscr.addch(row, col, 'A')
-        stdscr.refresh()
+        stdscr.addch(row, col, '█')
 
+        #stdscr.refresh()
 
 
 curses.wrapper(main)
