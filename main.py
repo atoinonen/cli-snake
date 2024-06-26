@@ -49,7 +49,7 @@ def main(stdscr: curses.window):
 
         stdscr.addstr(row, 2*col, "  ")
         
-        if c == -1:
+        if c == -1 or c not in [ord('w'), ord('s'), ord('a'), ord('d'), ord('q')]:
             c = last
 
         if c == ord('w'):
