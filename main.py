@@ -63,9 +63,9 @@ def main(stdscr: curses.window):
                 if (apple_row, apple_col) not in snakeq.queue:
                     break
             stdscr.addch(apple_row, 2*apple_col, apple)
-        else:
-            row_del, col_del = snakeq.get()
-            stdscr.addstr(row_del, 2*col_del, "  ")
+            snakeq.put((row, col))
+        row_del, col_del = snakeq.get()
+        stdscr.addstr(row_del, 2*col_del, "  ")
         
         if c == -1 or c not in [ord('w'), ord('s'), ord('a'), ord('d'), ord('q')]:
             c = last
