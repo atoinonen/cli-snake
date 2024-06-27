@@ -42,30 +42,24 @@ def main(stdscr: curses.window):
     #stdscr.refresh()
     #stdscr.nodelay(True)
     
-    apple_row = random.randint(1, HEIGHT)
-    apple_col = random.randint(1, WIDTH)
+    while True:
+        apple_row = random.randint(1, HEIGHT)
+        apple_col = random.randint(1, WIDTH)
+        stdscr.addstr(5, WIDTH*2+4, "row: {:02}".format(apple_row))
+        stdscr.addstr(6, WIDTH*2+4, "col: {:02}".format(apple_col))
+        if (apple_row, apple_col) not in snakeq.queue:
+            break
 
     stdscr.addch(apple_row, 2*apple_col, apple)
 
-    stdscr.timeout(500)
+    #stdscr.timeout(500)
 
     while True:
         #time.sleep(0.5)
         c = stdscr.getch()
         #curses.flushinp()
 
-        if snake_ate:
-            snake_ate = False
-            #snake_location = list(snakeq.queue)
-            while True:
-                apple_row = random.randint(1, HEIGHT)
-                apple_col = random.randint(1, WIDTH)
-                if (apple_row, apple_col) not in snakeq.queue:
-                    break
-            stdscr.addch(apple_row, 2*apple_col, apple)
-            snakeq.put((row, col))
-        row_del, col_del = snakeq.get()
-        stdscr.addstr(row_del, 2*col_del, "  ")
+
         
         if c == -1 or c not in [ord('w'), ord('s'), ord('a'), ord('d'), ord('q')]:
             c = last
@@ -95,13 +89,31 @@ def main(stdscr: curses.window):
         if row == apple_row and col == apple_col:
             snake_ate = True
 
+        if snake_ate:
+            snake_ate = False
+            #snake_location = list(snakeq.queue)
+            while True:
+                apple_row = random.randint(1, HEIGHT)
+                apple_col = random.randint(1, WIDTH)
+                stdscr.addstr(5, WIDTH*2+4, "row: {:02}".format(apple_row))
+                stdscr.addstr(6, WIDTH*2+4, "col: {:02}".format(apple_col))
+                stdscr.addstr(7, WIDTH*2+4, "sizeq: {:02}".format(snakeq.qsize()))
+                stdscr.addstr(8, WIDTH*2+4, "sizel: {:02}".format(len(list(snakeq.queue))))
+                if (apple_row, apple_col) not in snakeq.queue:
+                    break
+                elif snakeq.qsize() >= HEIGHT * WIDTH:
+                    break
+            stdscr.addch(apple_row, 2*apple_col, apple)
+            snakeq.put((row, col))
+        row_del, col_del = snakeq.get()
+        stdscr.addstr(row_del, 2*col_del, "  ")
         stdscr.addstr(0, WIDTH*2+4, "row: {:02}".format(row))
         stdscr.addstr(1, WIDTH*2+4, "col: {:02}".format(col))
         stdscr.addstr(2, WIDTH*2+4, "xy: {}".format(stdscr.getyx()))
 
         
         snakeq.put((row, col))
-        #stdscr.addstr(3, 90, "snakeq: {}".format(snakeq.queue))
+        stdscr.addstr(3, WIDTH*2+4, "snakeq: {}".format(snakeq.queue))
         for row, col in snakeq.queue:
             stdscr.addch(row, 2*col, '🔥')
 
