@@ -97,8 +97,9 @@ def main(stdscr: curses.window):
         snakeq.put((row, col))
         stdscr.addstr(3, 90, "snakeq: {}".format(snakeq.queue))
         for row, col in snakeq.queue:
-            stdscr.addch(row, 2*col, '🐍')
+            stdscr.addch(row, 2*col, '🔥')
 
+        stdscr.addch(row, 2*col, '🐲')
         #stdscr.refresh()
 
 
