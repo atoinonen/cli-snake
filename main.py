@@ -4,8 +4,8 @@ import time
 import queue
 from curses.textpad import rectangle
 
-HEIGHT = 40
-WIDTH = 40
+HEIGHT = 4
+WIDTH = 4
 
 
 def clamp(bottom: int, number: int, top: int):
@@ -32,11 +32,11 @@ def main(stdscr: curses.window):
     #snake_size = 1
     snake_ate = False
     snakeq = queue.Queue()
-    row = 20
-    col = 20
+    row = HEIGHT//2
+    col = WIDTH//2
 
-    row = clamp(1, row, HEIGHT)
-    col = clamp(1, col, WIDTH)
+    #row = clamp(1, row, HEIGHT)
+    #col = clamp(1, col, WIDTH)
     snakeq.put((row,col))
     stdscr.addch(row, 2*col, '🐲')
     #stdscr.refresh()
@@ -83,9 +83,9 @@ def main(stdscr: curses.window):
         
         last = c
 
-        if row not in range(1, HEIGHT+1):
+        if row < 1 or row > HEIGHT:
             break
-        if col not in range(1, WIDTH+1):
+        if col < 1 or col > WIDTH:
             break
         if (row, col) in snakeq.queue:
             break
@@ -95,9 +95,9 @@ def main(stdscr: curses.window):
         if row == apple_row and col == apple_col:
             snake_ate = True
 
-        stdscr.addstr(0, 90, "row: {:02}".format(row))
-        stdscr.addstr(1, 90, "col: {:02}".format(col))
-        stdscr.addstr(2, 90, "xy: {}".format(stdscr.getyx()))
+        stdscr.addstr(0, WIDTH*2+4, "row: {:02}".format(row))
+        stdscr.addstr(1, WIDTH*2+4, "col: {:02}".format(col))
+        stdscr.addstr(2, WIDTH*2+4, "xy: {}".format(stdscr.getyx()))
 
         
         snakeq.put((row, col))
