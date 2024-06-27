@@ -38,7 +38,7 @@ def main(stdscr: curses.window):
     row = clamp(1, row, HEIGHT)
     col = clamp(1, col, WIDTH)
     snakeq.put((row,col))
-    stdscr.addch(row, 2*col, '🐍')
+    stdscr.addch(row, 2*col, '🐲')
     #stdscr.refresh()
     #stdscr.nodelay(True)
     
@@ -83,6 +83,12 @@ def main(stdscr: curses.window):
         
         last = c
 
+        if row not in range(1, HEIGHT+1):
+            break
+        if col not in range(1, WIDTH+1):
+            break
+        if (row, col) in snakeq.queue:
+            break
         row = clamp(1, row, HEIGHT)
         col = clamp(1, col, WIDTH)
 
@@ -95,7 +101,7 @@ def main(stdscr: curses.window):
 
         
         snakeq.put((row, col))
-        stdscr.addstr(3, 90, "snakeq: {}".format(snakeq.queue))
+        #stdscr.addstr(3, 90, "snakeq: {}".format(snakeq.queue))
         for row, col in snakeq.queue:
             stdscr.addch(row, 2*col, '🔥')
 
