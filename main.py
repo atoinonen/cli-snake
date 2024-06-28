@@ -24,8 +24,13 @@ def draw():
 def main(stdscr: curses.window):
     curses.curs_set(0)
 
-    rectangle(stdscr, 0,1, 1+HEIGHT, 1+2*WIDTH+1)
+    gamewindow = curses.newwin(HEIGHT+2, 2*WIDTH+2, 0, 0)
+    #rectangle(gamewindow, 0,1, 1+HEIGHT, 1+2*WIDTH+1)
+    gamewindow.border()
     
+    infowindow = curses.newwin(10, 20, 0, 2*WIDTH+4)
+    infowindow.border()
+    infowindow.refresh()
 
     apple = '🍎'
     last = ord('d')
@@ -39,25 +44,25 @@ def main(stdscr: curses.window):
     #row = clamp(1, row, HEIGHT)
     #col = clamp(1, col, WIDTH)
     snakeq.put((row,col))
-    stdscr.addch(row, 2*col, '🐲')
-    #stdscr.refresh()
-    #stdscr.nodelay(True)
+    gamewindow.addch(row, 2*col-1, '🐲')
+    #gamewindow.refresh()
+    #gamewindow.nodelay(True)
     
     while True:
         apple_row = random.randint(1, HEIGHT)
         apple_col = random.randint(1, WIDTH)
-        stdscr.addstr(5, WIDTH*2+4, "row: {:02}".format(apple_row))
-        stdscr.addstr(6, WIDTH*2+4, "col: {:02}".format(apple_col))
+        #infowindow.addstr(5, 1, "row: {:02}".format(apple_row))
+        #infowindow.addstr(6, 1, "col: {:02}".format(apple_col))
         if (apple_row, apple_col) not in snakeq.queue:
             break
 
-    stdscr.addch(apple_row, 2*apple_col, apple)
+    gamewindow.addch(apple_row, 2*apple_col-1, apple)
 
-    #stdscr.timeout(500)
+    #gamewindow.timeout(500)
 
     while True:
         #time.sleep(0.5)
-        c = stdscr.getch()
+        c = gamewindow.getch()
         #curses.flushinp()
 
 
@@ -96,8 +101,8 @@ def main(stdscr: curses.window):
             break
         if (row, col) in snakeq.queue:
             break
-        row = clamp(1, row, HEIGHT)
-        col = clamp(1, col, WIDTH)
+        #row = clamp(1, row, HEIGHT)
+        #col = clamp(1, col, WIDTH)
 
         snakeq.put((row, col))
 
@@ -111,29 +116,30 @@ def main(stdscr: curses.window):
             while True:
                 apple_row = random.randint(1, HEIGHT)
                 apple_col = random.randint(1, WIDTH)
-                stdscr.addstr(5, WIDTH*2+4, "row: {:02}".format(apple_row))
-                stdscr.addstr(6, WIDTH*2+4, "col: {:02}".format(apple_col))
-                stdscr.addstr(7, WIDTH*2+4, "sizeq: {:02}".format(snakeq.qsize()))
-                stdscr.addstr(8, WIDTH*2+4, "sizel: {:02}".format(len(list(snakeq.queue))))
+                infowindow.addstr(5, 1, "row: {:02}".format(apple_row))
+                infowindow.addstr(6, 1, "col: {:02}".format(apple_col))
+                infowindow.addstr(7, 1, "sizeq: {:02}".format(snakeq.qsize()))
+                infowindow.addstr(8, 1, "sizel: {:02}".format(len(list(snakeq.queue))))
                 if (apple_row, apple_col) not in snakeq.queue:
                     break
                 elif snakeq.qsize() >= HEIGHT * WIDTH:
                     break
-            stdscr.addch(apple_row, 2*apple_col, apple)
+            gamewindow.addch(apple_row, 2*apple_col-1, apple)
             #snakeq.put((row, col))
         else:
             row_del, col_del = snakeq.get()
-            stdscr.addstr(row_del, 2*col_del, "  ")
-        stdscr.addstr(0, WIDTH*2+4, "row: {:02}".format(row))
-        stdscr.addstr(1, WIDTH*2+4, "col: {:02}".format(col))
-        stdscr.addstr(2, WIDTH*2+4, "xy: {}".format(stdscr.getyx()))
+            gamewindow.addstr(row_del, 2*col_del-1, "  ")
+        infowindow.addstr(1, 1, "row: {:02}".format(row))
+        infowindow.addstr(2, 1, "col: {:02}".format(col))
+        infowindow.addstr(3, 1, "xy: {}".format(gamewindow.getyx()))
 
-        #stdscr.addstr(3, WIDTH*2+4, "snakeq: {}".format(snakeq.queue))
+        #infowindow.addstr(0, 0, "snakeq: {}".format(snakeq.queue))
+        infowindow.refresh()
         for row, col in snakeq.queue:
-            stdscr.addch(row, 2*col, '🔥')
+            gamewindow.addch(row, 2*col-1, '🔥')
 
-        stdscr.addch(row, 2*col, '🐲')
-        #stdscr.refresh()
+        gamewindow.addch(row, 2*col-1, '🐲')
+        #gamewindow.refresh()
 
 
 curses.wrapper(main)
