@@ -86,6 +86,8 @@ def main(stdscr: curses.window):
         row = clamp(1, row, HEIGHT)
         col = clamp(1, col, WIDTH)
 
+        snakeq.put((row, col))
+
         if row == apple_row and col == apple_col:
             snake_ate = True
 
@@ -111,9 +113,7 @@ def main(stdscr: curses.window):
         stdscr.addstr(1, WIDTH*2+4, "col: {:02}".format(col))
         stdscr.addstr(2, WIDTH*2+4, "xy: {}".format(stdscr.getyx()))
 
-        
-        snakeq.put((row, col))
-        stdscr.addstr(3, WIDTH*2+4, "snakeq: {}".format(snakeq.queue))
+        #stdscr.addstr(3, WIDTH*2+4, "snakeq: {}".format(snakeq.queue))
         for row, col in snakeq.queue:
             stdscr.addch(row, 2*col, '🔥')
 
