@@ -34,6 +34,7 @@ def main(stdscr: curses.window):
     snakeq = queue.Queue()
     row = HEIGHT//2
     col = WIDTH//2
+    just_head = True
 
     #row = clamp(1, row, HEIGHT)
     #col = clamp(1, col, WIDTH)
@@ -64,6 +65,18 @@ def main(stdscr: curses.window):
         if c == -1 or c not in [ord('w'), ord('s'), ord('a'), ord('d'), ord('q')]:
             c = last
 
+        if just_head:
+            pass
+        elif last == ord('w') and c == ord('s'):
+            c = ord('w')
+        elif last == ord('s') and c == ord('w'):
+            c = ord('s')
+        elif last == ord('a') and c == ord('d'):
+            c = ord('a')
+        elif last == ord('d') and c == ord('a'):
+            c = ord('d')
+
+
         if c == ord('w'):
             row = row - 1
         elif c == ord('s'):
@@ -93,6 +106,7 @@ def main(stdscr: curses.window):
 
         if snake_ate:
             snake_ate = False
+            just_head = False
             #snake_location = list(snakeq.queue)
             while True:
                 apple_row = random.randint(1, HEIGHT)
