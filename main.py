@@ -4,8 +4,8 @@ import time
 import queue
 from curses.textpad import rectangle
 
-HEIGHT = 4
-WIDTH = 4
+HEIGHT = 10 
+WIDTH = 10
 
 
 def clamp(bottom: int, number: int, top: int):
@@ -106,9 +106,10 @@ def main(stdscr: curses.window):
                 elif snakeq.qsize() >= HEIGHT * WIDTH:
                     break
             stdscr.addch(apple_row, 2*apple_col, apple)
-            snakeq.put((row, col))
-        row_del, col_del = snakeq.get()
-        stdscr.addstr(row_del, 2*col_del, "  ")
+            #snakeq.put((row, col))
+        else:
+            row_del, col_del = snakeq.get()
+            stdscr.addstr(row_del, 2*col_del, "  ")
         stdscr.addstr(0, WIDTH*2+4, "row: {:02}".format(row))
         stdscr.addstr(1, WIDTH*2+4, "col: {:02}".format(col))
         stdscr.addstr(2, WIDTH*2+4, "xy: {}".format(stdscr.getyx()))
