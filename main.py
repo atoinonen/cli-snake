@@ -58,7 +58,7 @@ def main(stdscr: curses.window):
 
     gamewindow.addch(apple_row, 2*apple_col-1, apple)
 
-    #gamewindow.timeout(500)
+    gamewindow.timeout(150)
 
     while True:
         #time.sleep(0.5)
