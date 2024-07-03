@@ -19,12 +19,24 @@ def draw():
     snake_head = '🐲'
     snake_body = '🔥'
 
+def startscreen():
+    window = curses.newwin(10, 30, 0, 0)
+    window.addstr(1, 5, " ┏┑ ┎┒┎ ┏┓ ┒┏ ┏┑")
+    window.addstr(2, 5, " ┃  ┃┃┃ ┣┫ ┣┫ ┣ ")
+    window.addstr(3, 5, "┕┛  ┚┖┚ ┚┖ ┚┗ ┗┙")
+    window.addstr(5, 1, "Press any key to continue...")
+    window.getch()
+    window.clear()
+    window.refresh()
+
 def main(stdscr: curses.window):
     curses.curs_set(0)
 
+    startscreen()
+
     gamewindow = curses.newwin(HEIGHT+2, 2*WIDTH+2, 0, 0)
     gamewindow.border()
-    
+
     infowindow = curses.newwin(10, 20, 0, 2*WIDTH+4)
     infowindow.border()
     infowindow.refresh()
