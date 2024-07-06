@@ -29,16 +29,16 @@ def startscreen():
     #curses.echo()
     #window.getstr()
     while True:
-        window.addstr(7, 9, "↑W      ↑D")
-        window.addstr(8, 8, "{:3}  🞬  {:3}      ".format(height, width))
-        window.addstr(9, 9, "↓S      ↓A")
+        window.addstr(7, 8, "↑W      ↑D")
+        window.addstr(8, 7, "{:3}  🞬  {:3}      ".format(height, width))
+        window.addstr(9, 8, "↓S      ↓A")
         #curses.update_lines_cols()
         #window.addstr(10, 3, "LINES: {:3} COLS: {:3}".format(curses.LINES, curses.COLS))
 
         key = window.getch()
         #window.clear()
         #window.addstr(7, 10, "{}".format(key))
-        if key == ord('\n'):
+        if key == ord('\n') or key == ord(' '):
             break
         elif key == ord('w'):
             height += 1
@@ -59,6 +59,20 @@ def startscreen():
     window.clear()
     window.refresh()
     return (height, width)
+
+def endgamescreen(score: int):
+    curses.update_lines_cols()
+    centerline = curses.LINES // 2
+    centercol = curses.COLS // 2
+    window = curses.newwin(20, 30, centerline - 5, centercol - 11)
+    window.addstr(1, 5, "Game Over")
+    window.addstr(2, 5, "Score: {}".format(score))
+    while True:
+        key = window.getch()
+        if key == ord('\n') or key == ord(' '):
+            break
+    window.clear()
+    window.refresh()
 
 def main(stdscr: curses.window):
     curses.curs_set(0)
@@ -82,6 +96,7 @@ def main(stdscr: curses.window):
     row = height//2
     col = width//2
     just_head = True
+    score = 0
 
     snakeq.put((row,col))
     gamewindow.addch(row, 2*col-1, '🐲')
@@ -139,6 +154,7 @@ def main(stdscr: curses.window):
         if row == apple_row and col == apple_col:
             # Snake eats an apple
             just_head = False
+            score += 1
             while True:
                 apple_row = random.randint(1, height)
                 apple_col = random.randint(1, width)
@@ -164,6 +180,10 @@ def main(stdscr: curses.window):
             gamewindow.addch(row, 2*col-1, '🔥')
 
         gamewindow.addch(row, 2*col-1, '🐲')
+
+    gamewindow.clear()
+    gamewindow.refresh()
+    endgamescreen(score)
 
 
 curses.wrapper(main)
